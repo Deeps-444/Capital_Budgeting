@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+.env
+
+# ML models (can be regenerated)
+*.pkl
+
+# OS files
+.DS_Store
+Thumbs.db
