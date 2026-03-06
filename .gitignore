@@ -1,6 +1,16 @@
+#java springboot
+backend/target/
+backend/*.log
+
+#node react
+frontend/node_modules/
+frontend/build/
+
 # Python
-__pycache__/
-*.pyc
+machine_learning/__pycache__/
+machine_learning/*.pyc
+machine_learning/.venv/
+machine_learning/venv/
 
 # Jupyter
 .ipynb_checkpoints/
@@ -15,3 +25,7 @@ venv/
 # OS files
 .DS_Store
 Thumbs.db
+
+#IDE files
+.vscode/
+.idea/
