@@ -5,8 +5,10 @@ import { useNavigate } from "react-router-dom";
 function ProjectForm() {
   const navigate = useNavigate();
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const [formData, setFormData] = useState({
-    userId: 1,
+    userId: user?.userId,
     initialInvestment: "",
     revenueGrowthRate: "",
     operatingCostRatio: "",
@@ -42,14 +44,25 @@ function ProjectForm() {
 
   return (
     <div>
-      {Object.keys(formData).map((key) => (
-        <div key={key}>
-          <label>{key}</label>
-          <input type="number" name={key} onChange={handleChange} />
-        </div>
-      ))}
-
+      {Object.keys(formData)
+        .filter((key) => key !== "userId")
+        .map((key) => (
+          <div key={key}>
+            <label>{key.replace(/([A-Z])/g, " $1")}</label>
+            <input type="number" name={key} onChange={handleChange} />
+          </div>
+        ))}
+      {/* // to evaluate the project */}
       <button onClick={evaluateProject}>Evaluate Project</button>
+      {/* to logout */}
+      <button
+        onClick={() => {
+          localStorage.removeItem("user");
+          window.location.href = "/login";
+        }}
+      >
+        Logout
+      </button>
     </div>
   );
 }

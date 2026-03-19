@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import annotationPlugin from "chartjs-plugin-annotation";
 
 ChartJS.register(
   CategoryScale,
@@ -18,6 +19,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  annotationPlugin,
 );
 
 function ResultPage() {
@@ -40,12 +42,22 @@ function ResultPage() {
 
   if (!result.npvDistribution) return <h2>No Simulation Data</h2>;
   //Monte Carlo Histogram
-  const npvData = result.npvDistribution?.slice(0, 500); // limit for performance
+  const npvData = result.npvDistribution || []; // limit for performance
 
+  // 5% VaR: Value at risk ==> standard threshold
+  const sortedData = [...npvData].sort((a, b) => a - b);
+  const varIndex = Math.floor(0.05 * sortedData.length);
+  const varValue = sortedData[varIndex];
+
+  //VaR to bin idex
   const bins = 20;
   const min = Math.min(...npvData);
   const max = Math.max(...npvData);
   const binSize = (max - min) / bins;
+  const varBinIndex = Math.min(
+    Math.floor((varValue - min) / binSize),
+    bins - 1,
+  );
 
   const histogram = new Array(bins).fill(0);
 
@@ -67,8 +79,43 @@ function ResultPage() {
       {
         label: "NPV Distribution",
         data: histogram,
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        borderRadius: 5,
       },
     ],
+  };
+
+  const histogramOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Monte Carlo NPV Distribution",
+      },
+    },
+  };
+
+  const options = {
+    plugins: {
+      annotation: {
+        annotations: {
+          line1: {
+            type: "line",
+            xMin: varBinIndex,
+            xMax: varBinIndex,
+            borderColor: "red",
+            borderWidth: 2,
+            label: {
+              content: "VaR (5%)",
+              enabled: true,
+            },
+          },
+        },
+      },
+    },
   };
 
   return (
@@ -101,7 +148,14 @@ function ResultPage() {
 
       <h3>Monte Carlo NPV Distribution</h3>
 
-      <Bar key={JSON.stringify(histogram)} data={histogramData} />
+      <Bar
+        key={JSON.stringify(histogram)}
+        data={histogramData}
+        options={{
+          ...histogramOptions,
+          ...options,
+        }}
+      />
     </div>
   );
 }

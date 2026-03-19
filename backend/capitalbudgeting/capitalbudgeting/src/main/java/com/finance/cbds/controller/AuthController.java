@@ -11,7 +11,7 @@ import com.finance.cbds.dto.LoginResponse;
 import com.finance.cbds.service.AuthService;
 
 @RestController // Api controller
-@RequestMapping("/auth") // bae url 
+@RequestMapping("/") // bae url 
 @CrossOrigin(origins = "http://localhost:3000") // alllows react to call origin
 public class AuthController {
 	private final AuthService authService;
