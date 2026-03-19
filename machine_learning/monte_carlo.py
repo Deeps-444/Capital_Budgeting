@@ -1,7 +1,7 @@
 import numpy as np
 
 def monte_carlo_simulation(cashflows, investment, discount_rate, simulations=5000):
-
+    cashflows = np.array(cashflows)
     results = []
 
     for i in range(simulations):
@@ -24,4 +24,9 @@ def monte_carlo_simulation(cashflows, investment, discount_rate, simulations=500
 
     risk_probability = np.mean(results < 0)
 
-    return results, mean_npv, risk_probability
+    return {
+    "predictedCashflows": cashflows.tolist(),
+    "npvDistribution": results.tolist(),   
+    "meanNPV": float(mean_npv),
+    "riskProbability": float(risk_probability)
+}

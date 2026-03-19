@@ -1,18 +1,47 @@
 package com.finance.cbds.dto;
 
 public class ProjectInputDto {
+	private Long userId;
 	 private String projectName;
 
-	    private Double initialInvestment;
-	    private Double revenueGrowthRate;
-	    private Double operatingCostRatio;
-	    private Double inflationRate;
-	    private Double debtRatio;
-	    private Double marketGrowthIndex;
-	    private Double sectorRiskIndex;
-	    private Double discountRate;
+	 private Double initialInvestment;
+	 private Double revenueGrowthRate;
+	 private Double operatingCostRatio;
+	 private Double workingCapitalRatio;
+	 private Double capexRatio;
+	 private Double inflationRate;
+	 private Double debtRatio;
+	 private Double marketGrowthIndex;
+	 private Double sectorRiskIndex;
+	 private Double discountRate;
+	    
+	    public void setWorkingCapitalRatio(Double workingCapitalRatio) {
+			this.workingCapitalRatio = workingCapitalRatio;
+		}
 
-	    public String getProjectName() {
+		public void setCapexRatio(Double capexRatio) {
+			this.capexRatio = capexRatio;
+		}
+
+		public Double getWorkingCapitalRatio() {
+			return workingCapitalRatio;
+		}
+
+		public Double getCapexRatio() {
+			return capexRatio;
+		}
+
+		
+
+	    public Long getUserId() {
+			return userId;
+		}
+
+		public void setUserId(Long userId) {
+			this.userId = userId;
+		}
+
+		public String getProjectName() {
 	        return projectName;
 	    }
 

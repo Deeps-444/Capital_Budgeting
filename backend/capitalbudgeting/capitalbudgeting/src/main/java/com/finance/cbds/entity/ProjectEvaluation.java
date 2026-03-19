@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 
@@ -22,7 +24,7 @@ public class ProjectEvaluation {
     private Double revenueGrowthRate;
     private Double operatingCostRatio;
     private Double workingCapitalRatio;
-    private Double maintenanceCapexRatio;
+    private Double capexRatio;
     private Double inflationRate;
     private Double debtRatio;
     private Double marketGrowthIndex;
@@ -37,10 +39,20 @@ public class ProjectEvaluation {
     private Double year5Cashflow;
 
     // Results
-    private Double meanNpv;
+    private Double meanNPV;
     private Double riskProbability;
     
+    //user
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
 	public String getProjectName() {
 		return projectName;
 	}
@@ -109,14 +121,14 @@ public class ProjectEvaluation {
 
 
 
-	public Double getMaintenanceCapexRatio() {
-		return maintenanceCapexRatio;
+	public Double getCapexRatio() {
+		return capexRatio;
 	}
 
 
 
-	public void setMaintenanceCapexRatio(Double maintenanceCapexRatio) {
-		this.maintenanceCapexRatio = maintenanceCapexRatio;
+	public void setCapexRatio(Double maintenanceCapexRatio) {
+		this.capexRatio = maintenanceCapexRatio;
 	}
 
 
@@ -241,14 +253,14 @@ public class ProjectEvaluation {
 
 
 
-	public Double getMeanNpv() {
-		return meanNpv;
+	public Double getMeanNPV() {
+		return meanNPV;
 	}
 
 
 
-	public void setMeanNpv(Double meanNpv) {
-		this.meanNpv = meanNpv;
+	public void setMeanNPV(Double meanNpv) {
+		this.meanNPV = meanNpv;
 	}
 
 

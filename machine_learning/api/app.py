@@ -16,6 +16,11 @@ def home():
 @app.post("/predict")
 def predict(data: dict):
 
+    # 🔹 extract inputs properly
+    initial_investment = data["initialInvestment"]
+    discount_rate = data["discountRate"]
+
+    # 🔹 prepare features for ML model
     features = np.array([[
         data["initialInvestment"],
         data["revenueGrowthRate"],
@@ -28,18 +33,17 @@ def predict(data: dict):
         data["discountRate"]
     ]])
 
-    cashflows = model.predict(features)[0]
+    # predict cashflows
+    predicted = model.predict(features)
 
-    npv_dist, mean_npv, risk = monte_carlo_simulation(
+    # IMPORTANT: ensure it's a list/array of 5 values
+    cashflows = np.array(predicted).flatten()
+
+    #call Monte Carlo
+    mc_result = monte_carlo_simulation(
         cashflows,
-        data["initialInvestment"],
-        data["discountRate"]
+        initial_investment,
+        discount_rate
     )
 
-
-    return {
-        "predictedCashflows": cashflows.tolist(),
-        "meanNPV": float(mean_npv),
-        "riskProbability": float(risk),
-        "npvDistribution": npv_dist.tolist()
-    }
+    return mc_result

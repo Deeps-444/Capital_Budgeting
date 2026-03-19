@@ -4,67 +4,50 @@ public class ProjectResultDto {
 	private String projectName;
 
     private Double initialInvestment;
-    private Double revenueGrowthRate;
-    private Double operatingCostRatio;
-    private Double inflationRate;
-    private Double debtRatio;
-    private Double marketGrowthIndex;
-    private Double sectorRiskIndex;
-    private Double discountRate;
+    private Double meanNPV;
+    private Double riskProbability;
+    private double[] predictedCashflows;
+    private double[] npvDistribution;
+    
+   
+	//getters and setters
+    public double[] getNpvDistribution() {
+		return npvDistribution;
+	}
+	public void setNpvDistribution(double[] npvDistribution) {
+		this.npvDistribution = npvDistribution;
+	}
 	public String getProjectName() {
 		return projectName;
-	}
-	public Double getInitialInvestment() {
-		return initialInvestment;
-	}
-	public Double getRevenueGrowthRate() {
-		return revenueGrowthRate;
-	}
-	public Double getOperatingCostRatio() {
-		return operatingCostRatio;
-	}
-	public Double getInflationRate() {
-		return inflationRate;
-	}
-	public Double getDebtRatio() {
-		return debtRatio;
-	}
-	public Double getMarketGrowthIndex() {
-		return marketGrowthIndex;
-	}
-	public Double getSectorRiskIndex() {
-		return sectorRiskIndex;
-	}
-	public Double getDiscountRate() {
-		return discountRate;
 	}
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
 	}
+	public Double getInitialInvestment() {
+		return initialInvestment;
+	}
 	public void setInitialInvestment(Double initialInvestment) {
 		this.initialInvestment = initialInvestment;
 	}
-	public void setRevenueGrowthRate(Double revenueGrowthRate) {
-		this.revenueGrowthRate = revenueGrowthRate;
+	public Double getMeanNPV() {
+		return meanNPV;
 	}
-	public void setOperatingCostRatio(Double operatingCostRatio) {
-		this.operatingCostRatio = operatingCostRatio;
+	public void setMeanNPV(Double meanNPV) {
+		this.meanNPV = meanNPV;
 	}
-	public void setInflationRate(Double inflationRate) {
-		this.inflationRate = inflationRate;
+	public Double getRiskProbability() {
+		return riskProbability;
 	}
-	public void setDebtRatio(Double debtRatio) {
-		this.debtRatio = debtRatio;
+	public void setRiskProbability(Double riskProbability) {
+		this.riskProbability = riskProbability;
 	}
-	public void setMarketGrowthIndex(Double marketGrowthIndex) {
-		this.marketGrowthIndex = marketGrowthIndex;
+	public double[] getPredictedCashflows() {
+		return predictedCashflows;
 	}
-	public void setSectorRiskIndex(Double sectorRiskIndex) {
-		this.sectorRiskIndex = sectorRiskIndex;
+	public void setPredictedCashflows(double[] predictedCashflows) {
+		this.predictedCashflows = predictedCashflows;
 	}
-	public void setDiscountRate(Double discountRate) {
-		this.discountRate = discountRate;
-	}
+    
     
     
 }
