@@ -1,21 +1,38 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
+
+import CashflowChart from "../components/charts/CashflowChart";
+import RiskDonut from "../components/charts/RiskDonut";
+import NPVGauge from "../components/charts/NPVGauge";
+
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
+  ArcElement,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
+
 import annotationPlugin from "chartjs-plugin-annotation";
 
+import DashboardLayout from "../components/layout/DashboardLayout";
+import KPIBox from "../components/ui/KPIBox";
+import Card from "../components/ui/Card";
+
+// ✅ Register ALL required elements
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  ArcElement,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend,
@@ -26,38 +43,27 @@ function ResultPage() {
   const location = useLocation();
   const result = location.state;
 
-  console.log("Result reeived: ", result);
+  if (!result) return <h2 className="p-6">No data</h2>;
 
-  if (!result) return <h2>No data</h2>;
+  // 💰 Currency formatter
+  const formatCurrency = (num) =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(num);
 
-  const chartData = {
-    labels: result.predictedCashflows.map((_, i) => `Year ${i + 1}`),
-    datasets: [
-      {
-        label: "Cashflows",
-        data: result.predictedCashflows,
-      },
-    ],
-  };
+  // 🎲 Monte Carlo Histogram
+  const npvData = result.npvDistribution || [];
 
-  if (!result.npvDistribution) return <h2>No Simulation Data</h2>;
-  //Monte Carlo Histogram
-  const npvData = result.npvDistribution || []; // limit for performance
-
-  // 5% VaR: Value at risk ==> standard threshold
   const sortedData = [...npvData].sort((a, b) => a - b);
   const varIndex = Math.floor(0.05 * sortedData.length);
   const varValue = sortedData[varIndex];
 
-  //VaR to bin idex
   const bins = 20;
   const min = Math.min(...npvData);
   const max = Math.max(...npvData);
   const binSize = (max - min) / bins;
-  const varBinIndex = Math.min(
-    Math.floor((varValue - min) / binSize),
-    bins - 1,
-  );
 
   const histogram = new Array(bins).fill(0);
 
@@ -66,11 +72,10 @@ function ResultPage() {
     histogram[index]++;
   });
 
-  // labels for bins
   const histogramLabels = histogram.map((_, i) => {
     const start = (min + i * binSize).toFixed(0);
     const end = (min + (i + 1) * binSize).toFixed(0);
-    return `${start} to ${end}`;
+    return `${start} - ${end}`;
   });
 
   const histogramData = {
@@ -79,34 +84,27 @@ function ResultPage() {
       {
         label: "NPV Distribution",
         data: histogram,
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
-        borderRadius: 5,
+        backgroundColor: "#0F172A",
+        borderRadius: 4,
       },
     ],
   };
 
   const histogramOptions = {
     responsive: true,
+    maintainAspectRatio: false, // ✅ IMPORTANT
     plugins: {
-      legend: {
-        position: "top",
-      },
+      legend: { position: "top" },
       title: {
-        display: true,
-        text: "Monte Carlo NPV Distribution",
+        display: false,
       },
-    },
-  };
-
-  const options = {
-    plugins: {
       annotation: {
         annotations: {
           line1: {
             type: "line",
-            xMin: varBinIndex,
-            xMax: varBinIndex,
-            borderColor: "red",
+            xMin: Math.floor((varValue - min) / binSize),
+            xMax: Math.floor((varValue - min) / binSize),
+            borderColor: "#EF4444",
             borderWidth: 2,
             label: {
               content: "VaR (5%)",
@@ -119,44 +117,75 @@ function ResultPage() {
   };
 
   return (
-    <div style={{ padding: "30px" }}>
-      <h1>Results</h1>
+    <DashboardLayout>
+      <div className="h-[calc(100vh-80px)] overflow-y-auto flex flex-col">
+        {/* 🔷 Header */}
+        <div className="mb-3">
+          <h1 className="text-xl font-semibold text-gray-800">
+            {result.projectName}
+          </h1>
+          <p className="text-sm text-gray-500">Financial Analysis Summary</p>
+        </div>
 
-      <p>
-        <b>Project:</b> {result.projectName}
-      </p>
-      <p>
-        <b>Initial Investment:</b> {result.initialInvestment}
-      </p>
-      <p>
-        <b>Mean NPV:</b> {result.meanNPV}
-      </p>
-      <p>
-        <b>Risk Probability:</b> {result.riskProbability}
-      </p>
+        {/* 🟢 KPI SECTION */}
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          <KPIBox
+            title="Initial Investment"
+            value={formatCurrency(result.initialInvestment)}
+          />
 
-      <h3>Cashflows</h3>
-      <ul>
-        {result.predictedCashflows.map((cf, i) => (
-          <li key={i}>
-            Year {i + 1}: {cf}
-          </li>
-        ))}
-      </ul>
+          <Card className="flex items-center justify-center">
+            <NPVGauge value={result.meanNPV} />
+          </Card>
 
-      <Bar key={JSON.stringify(result.predictedCashflows)} data={chartData} />
+          <KPIBox
+            title="Risk Probability"
+            value={`${result.riskProbability}%`}
+            color="text-red-500"
+          />
+        </div>
 
-      <h3>Monte Carlo NPV Distribution</h3>
+        {/* 📊 MAIN VISUALS */}
+        <div className="grid grid-cols-2 gap-4 flex-1">
+          {/* 💸 Cashflow */}
+          <Card>
+            <h3 className="text-sm font-semibold mb-2 text-gray-700">
+              Cashflow Analysis
+            </h3>
+            <div className="h-48">
+              <CashflowChart cashflows={result.predictedCashflows} />
+            </div>
+          </Card>
 
-      <Bar
-        key={JSON.stringify(histogram)}
-        data={histogramData}
-        options={{
-          ...histogramOptions,
-          ...options,
-        }}
-      />
-    </div>
+          {/* 🍩 Risk */}
+          <Card>
+            <h3 className="text-sm font-semibold mb-2 text-gray-700">
+              Risk Analysis
+            </h3>
+            <div className="h-48">
+              <RiskDonut risk={result.riskProbability} />
+            </div>
+          </Card>
+        </div>
+
+        {/* 🎲 MONTE CARLO */}
+        <div className="mt-4">
+          <Card>
+            <h3 className="text-sm font-semibold mb-2 text-gray-700">
+              Monte Carlo Simulation
+            </h3>
+            <div className="h-52">
+              <Bar
+                key={JSON.stringify(histogramData)} // ✅ prevents canvas reuse error
+                data={histogramData}
+                options={histogramOptions}
+              />
+            </div>
+          </Card>
+        </div>
+      </div>
+    </DashboardLayout>
   );
 }
+
 export default ResultPage;
