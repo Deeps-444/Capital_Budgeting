@@ -12,6 +12,7 @@ import com.finance.cbds.dto.ProjectInputDto;
 @Service
 public class MLServiceClient {
 	
+	// to call python ml api
 	private final RestTemplate restTemplate = new RestTemplate();
 	
 	public MLResponseDto getPrediction(ProjectInputDto input) {
@@ -19,20 +20,21 @@ public class MLServiceClient {
 		String url = "http://127.0.0.1:8000/predict";
 		
 
-        Map<String, Object> request = new HashMap<>();
+//		Map<String, Object> request = new HashMap<>();
 
-        request.put("initialInvestment", input.getInitialInvestment());
-        request.put("revenueGrowthRate", input.getRevenueGrowthRate());
-        request.put("operatingCostRatio", input.getOperatingCostRatio());
-        request.put("workingCapitalRatio", input.getWorkingCapitalRatio());
-        request.put("capexRatio", input.getCapexRatio()); 
-        request.put("inflationRate", input.getInflationRate());
-        request.put("marketGrowthIndex", input.getMarketGrowthIndex());
-        request.put("sectorRiskIndex", input.getSectorRiskIndex());
-        request.put("discountRate", input.getDiscountRate());
-        MLResponseDto response = restTemplate.postForObject(url, request, MLResponseDto.class);
-
-        System.out.println("ML RESPONSE: " + response);
+//		request.put("initialInvestment", input.getInitialInvestment());
+//		request.put("revenueGrowthRate", input.getRevenueGrowthRate());
+//		request.put("inflationRate", input.getInflationRate());
+//		request.put("marketGrowthIndex", input.getMarketGrowthIndex());
+//		request.put("sectorRiskIndex", input.getSectorRiskIndex());
+//		request.put("discountRate", input.getDiscountRate());
+		
+		//spring converts project input dto -> inpuy to json 
+        MLResponseDto response = restTemplate.postForObject(url, input, MLResponseDto.class);
+        
+        //to confirm the mapping
+        System.out.println("Mean NPV: " + response.getMonteCarlo().getMeanNPV());
+        System.out.println("Risk Probability: " + response.getMonteCarlo().getRiskProbability());
 
         return response;
 	}

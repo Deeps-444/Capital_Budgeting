@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,9 +30,14 @@ public class PeController {
 		return service.saveProject(input);
 	}
 	
-	@GetMapping
-	public List<ProjectEvaluation> getAllProjects() {
-		return service.getAllProjects();
+	@GetMapping("/user/{userId}")
+	public List<ProjectResultDto> getProjectsByUser(@PathVariable Long userId) {
+	    return service.getProjectsByUser(userId);
+	}
+
+	@GetMapping("/{projectId}")
+	public ProjectResultDto getProjectById(@PathVariable Long projectId) {
+	    return service.getProjectById(projectId);
 	}
 
 }

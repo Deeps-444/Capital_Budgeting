@@ -4,17 +4,17 @@ import Topbar from "./Topbar";
 
 function DashboardLayout({ children }) {
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       {/* Sidebar */}
       <Sidebar />
 
       {/* Main Section */}
-      <div className="p-3 bg-[#F8FAFC] h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col bg-[#F8FAFC]">
         {/* Topbar */}
         <Topbar />
 
         {/* Content */}
-        <div className="p-6">{children}</div>
+        <div className="flex-1 p-4 overflow-auto">{children}</div>
       </div>
     </div>
   );

@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.finance.cbds.dto.LoginRequest;
 import com.finance.cbds.dto.LoginResponse;
+import com.finance.cbds.dto.RegisterDto;
 import com.finance.cbds.service.AuthService;
 
 @RestController // Api controller
-@RequestMapping("/") // bae url 
+@RequestMapping("/auth") // bae url 
 @CrossOrigin(origins = "http://localhost:3000") // alllows react to call origin
 public class AuthController {
 	private final AuthService authService;
@@ -24,6 +25,11 @@ public class AuthController {
 	@PostMapping("/login")
 	public LoginResponse login(@RequestBody LoginRequest request) {
 		return authService.login(request); // json to java object
+	}
+	
+	@PostMapping("/register")
+	public String register(@RequestBody RegisterDto request) {
+	    return authService.register(request);
 	}
 	
 }

@@ -17,7 +17,9 @@ public class User {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Column(name = "id")
+	private Long userId;
+	
 	
 	private String name;
 	
@@ -28,8 +30,8 @@ public class User {
 	private String role;
 	
 	//getter setter
-	public Long getId() {
-		return id;
+	public Long getUserId() {
+		return userId;
 	}
 	public String getName() {
 		return name;
@@ -43,8 +45,8 @@ public class User {
 	public String getRole() {
 		return role;
 	}
-	public void setId(Long id) {
-		this.id = id;
+	public void setUserId(Long id) {
+		this.userId = id;
 	}
 	public void setName(String name) {
 		this.name = name;

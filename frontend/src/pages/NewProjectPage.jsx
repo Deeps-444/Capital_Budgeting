@@ -1,18 +1,19 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ProjectForm from "../components/ProjectForm";
+import ProjectForm from "../components/projects/ProjectForm";
 import DashboardLayout from "../components/layout/DashboardLayout";
 
-function InputPage() {
+function NewProjectPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = sessionStorage.getItem("user");
+    const storedUser = sessionStorage.getItem("user");
 
-    if (!user) {
-      navigate("/login");
+    if (!storedUser) {
+      navigate("/login", { replace: true });
     }
-  }, [navigate]);
+    // eslint-disable-next-line
+  }, []);
 
   console.log("InputPage loaded");
 
@@ -27,4 +28,4 @@ function InputPage() {
   );
 }
 
-export default InputPage;
+export default NewProjectPage;

@@ -14,12 +14,6 @@ data["initialInvestment"] = np.random.uniform(500000, 5000000, n_projects)
 
 data["revenueGrowthRate"] = np.random.uniform(0.05, 0.20, n_projects)
 
-data["operatingCostRatio"] = np.random.uniform(0.4, 0.7, n_projects)
-
-data["workingCapitalRatio"] = np.random.uniform(0.05, 0.2, n_projects)
-
-data["capexRatio"] = np.random.uniform(0.03, 0.1, n_projects)
-
 data["inflationRate"] = np.random.uniform(0.02, 0.06, n_projects)
 
 data["marketGrowthIndex"] = np.random.uniform(0.8, 1.3, n_projects)
@@ -27,6 +21,33 @@ data["marketGrowthIndex"] = np.random.uniform(0.8, 1.3, n_projects)
 data["sectorRiskIndex"] = np.random.uniform(0.1, 0.4, n_projects)
 
 data["discountRate"] = np.random.uniform(0.08, 0.15, n_projects)
+
+data["operatingCostRatio"] = (
+    0.4
+    + 0.25 * data["sectorRiskIndex"]
+    + 0.2 * data["inflationRate"]
+    - 0.2 * data["marketGrowthIndex"]
+    + 0.1 * (data["revenueGrowthRate"] ** 2)
+    + np.random.normal(0, 0.01, n_projects)  # less noise
+)
+
+data["workingCapitalRatio"] = (
+    0.08
+    + 0.3 * data["revenueGrowthRate"]
+    + 0.15 * data["inflationRate"]
+    + 0.1 * data["sectorRiskIndex"]
+    + np.random.normal(0, 0.008, n_projects)
+)
+
+data["capexRatio"] = (
+    0.04
+    + 0.25 * data["sectorRiskIndex"]
+    + 0.15 * data["marketGrowthIndex"]
+    + 0.1 * (data["initialInvestment"] / 5000000)
+    + np.random.normal(0, 0.008, n_projects)
+)
+
+
 
 
 # 2. Generate Base Revenue
