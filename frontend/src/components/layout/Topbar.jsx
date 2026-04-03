@@ -5,35 +5,35 @@ function Topbar() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    sessionStorage.removeItem("user"); // clear login
-    navigate("/login"); // redirect
+    sessionStorage.removeItem("user");
+    navigate("/login");
   };
 
   return (
-    <div className="w-full bg-white shadow px-6 py-4 flex justify-between items-center">
+    <div className="w-full bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
       {/* Left */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-800">
+        <h2 className="text-lg font-semibold text-slate-800">
           Project Dashboard
         </h2>
-        <p className="text-sm text-gray-500">Scenario: Base Case</p>
+        <p className="text-sm text-slate-500">Scenario: Base Case</p>
       </div>
 
       {/* Right */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-5">
         {/* Date */}
-        <div className="text-sm text-gray-600">March 2026</div>
+        <div className="text-sm text-slate-500">March 2026</div>
 
-        {/* Logout Button */}
+        {/* Logout */}
         <button
           onClick={handleLogout}
-          className="text-sm text-red-500 hover:text-red-600 font-medium"
+          className="text-sm font-medium text-red-500 hover:text-red-600 transition"
         >
           Logout
         </button>
 
         {/* Avatar */}
-        <div className="w-8 h-8 bg-green-500 text-white flex items-center justify-center rounded-full">
+        <div className="w-9 h-9 bg-slate-800 text-white flex items-center justify-center rounded-full text-sm font-semibold">
           U
         </div>
       </div>

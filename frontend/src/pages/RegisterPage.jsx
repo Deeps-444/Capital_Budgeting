@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import register_img from "../images/register_img.png";
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -36,59 +37,87 @@ function RegisterPage() {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-100">
-      <form
-        onSubmit={handleRegister}
-        className="bg-white p-8 rounded-lg shadow-md w-96"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center text-green-500">
-          Register
-        </h2>
-
-        <input
-          type="text"
-          name="name"
-          placeholder="Full Name"
-          className="w-full mb-4 p-2 border rounded"
-          onChange={handleChange}
-          required
+    <div className="flex h-screen">
+      {/* LEFT SIDE */}
+      <div className="w-1/2 bg-gradient-to-br from-[#0F172A] to-[#1E293B] text-white flex flex-col justify-center items-center px-12">
+        {/* IMAGE */}
+        <img
+          src={register_img}
+          alt="signup illustration"
+          className="w-80 mb-8 drop-shadow-2xl"
         />
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          className="w-full mb-4 p-2 border rounded"
-          onChange={handleChange}
-          required
-        />
+        {/* TEXT */}
+        <h1 className="text-4xl font-semibold tracking-tight mb-4">
+          Cap<span className="text-green-400">Wise</span>
+        </h1>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          className="w-full mb-6 p-2 border rounded"
-          onChange={handleChange}
-          required
-        />
-
-        <button
-          type="submit"
-          className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
-        >
-          Register
-        </button>
-
-        <p className="text-sm text-center mt-4">
-          Already have an account?{" "}
-          <span
-            className="text-blue-500 cursor-pointer"
-            onClick={() => navigate("/login")}
-          >
-            Login
-          </span>
+        <p className="text-slate-300 text-center max-w-md text-sm leading-relaxed">
+          Create an account to start analyzing investment opportunities with
+          intelligent financial insights.
         </p>
-      </form>
+      </div>
+
+      {/* RIGHT SIDE */}
+      <div className="w-1/2 flex justify-center items-center bg-slate-50">
+        <form
+          onSubmit={handleRegister}
+          className="bg-white p-10 rounded-2xl shadow-sm border border-slate-200 w-96"
+        >
+          <h2 className="text-2xl font-semibold text-slate-800 mb-6">
+            Create account
+          </h2>
+
+          {/* Name */}
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl mb-4 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300"
+            onChange={handleChange}
+            required
+          />
+
+          {/* Email */}
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl mb-4 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300"
+            onChange={handleChange}
+            required
+          />
+
+          {/* Password */}
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl mb-6 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300"
+            onChange={handleChange}
+            required
+          />
+
+          {/* Button */}
+          <button
+            type="submit"
+            className="w-full py-3 rounded-xl text-sm font-medium bg-slate-800 text-white hover:bg-slate-700 transition"
+          >
+            Register
+          </button>
+
+          {/* Login */}
+          <p className="text-sm text-center mt-5 text-slate-500">
+            Already have an account?{" "}
+            <span
+              className="text-slate-800 font-medium cursor-pointer hover:underline"
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </span>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

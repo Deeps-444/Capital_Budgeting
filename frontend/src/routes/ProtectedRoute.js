@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 function ProtectedRoute({ children }) {
   const storedUser = sessionStorage.getItem("user");
 
-  // ✅ safely parse
+  // safely parse
   let user = null;
   try {
     user = storedUser ? JSON.parse(storedUser) : null;
@@ -12,7 +12,7 @@ function ProtectedRoute({ children }) {
   }
   console.log("ProtectedRoute:", storedUser);
 
-  // ✅ proper validation
+  // proper validation
   if (!user || !user.userId) {
     return <Navigate to="/login" replace />;
   }

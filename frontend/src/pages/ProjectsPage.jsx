@@ -20,7 +20,7 @@ function ProjectsPage() {
 
     const user = JSON.parse(storedUser);
 
-    // 📡 Fetch projects
+    //  Fetch projects
     const fetchProjects = async () => {
       try {
         const res = await axios.get(
@@ -34,18 +34,25 @@ function ProjectsPage() {
     };
 
     fetchProjects();
-  }, [navigate]); // ✅ safe dependency
+  }, [navigate]); // safe dependency
 
   return (
     <DashboardLayout>
-      <div className="p-6 space-y-6">
-        {/* Title */}
+      <div className="p-8 bg-slate-50 min-h-screen space-y-8">
+        {/* Header */}
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">My Projects</h1>
+          <div>
+            <h1 className="text-3xl font-semibold text-slate-800">
+              My Projects
+            </h1>
+            <p className="text-sm text-slate-500 mt-1">
+              View and manage your saved project analyses
+            </p>
+          </div>
 
           <button
             onClick={() => navigate("/new-project")}
-            className="bg-green-500 text-white px-4 py-2 rounded"
+            className="bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-700 transition"
           >
             + New Project
           </button>
@@ -53,13 +60,12 @@ function ProjectsPage() {
 
         {/* Projects */}
         {projects.length === 0 ? (
-          <p className="text-gray-500">No projects found</p>
+          <div className="text-slate-500 text-sm">No projects found</div>
         ) : (
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-6">
             {projects.map((proj) => (
               <div
                 key={proj.projectId}
-                className="bg-white p-4 rounded shadow cursor-pointer hover:shadow-lg transition"
                 onClick={async () => {
                   setLoadingId(proj.projectId);
 
@@ -76,20 +82,31 @@ function ProjectsPage() {
                     setLoadingId(null);
                   }
                 }}
+                className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition cursor-pointer"
               >
-                <h2 className="font-semibold">
+                {/* Title */}
+                <h2 className="font-semibold text-slate-800">
                   {loadingId === proj.projectId
                     ? "Loading..."
                     : proj.projectName}
                 </h2>
 
-                <p className="text-sm text-gray-500 mt-2">
-                  NPV: ₹{proj.meanNPV?.toFixed(0)}
-                </p>
+                {/* Info */}
+                <div className="mt-3 space-y-1 text-sm text-slate-500">
+                  <p>
+                    NPV:{" "}
+                    <span className="text-slate-700 font-medium">
+                      ₹{proj.meanNPV?.toFixed(0)}
+                    </span>
+                  </p>
 
-                <p className="text-sm text-gray-500">
-                  Risk: {(proj.riskProbability * 100).toFixed(1)}%
-                </p>
+                  <p>
+                    Risk:{" "}
+                    <span className="text-red-500 font-medium">
+                      {(proj.riskProbability * 100).toFixed(1)}%
+                    </span>
+                  </p>
+                </div>
               </div>
             ))}
           </div>

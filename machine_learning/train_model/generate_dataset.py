@@ -28,7 +28,7 @@ data["operatingCostRatio"] = (
     + 0.2 * data["inflationRate"]
     - 0.2 * data["marketGrowthIndex"]
     + 0.1 * (data["revenueGrowthRate"] ** 2)
-    + np.random.normal(0, 0.01, n_projects)  # less noise
+    + np.random.normal(0, 0.01, n_projects)  
 )
 
 data["workingCapitalRatio"] = (

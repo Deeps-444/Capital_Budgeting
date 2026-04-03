@@ -17,40 +17,46 @@ function Sidebar() {
   ];
 
   return (
-    <div className="w-64 h-screen bg-[#0F172A] text-white flex flex-col p-5">
+    <div className="w-64 h-screen bg-[#0F172A] text-slate-300 flex flex-col px-5 py-6">
       {/* Logo */}
       <h1
-        className="text-2xl font-bold mb-10 text-green-400 cursor-pointer"
+        className="text-2xl font-semibold mb-10 text-white tracking-tight cursor-pointer"
         onClick={() => navigate("/dashboard")}
       >
-        FinAI
+        Cap<span className="text-green-400">Wise</span>
       </h1>
 
       {/* Menu */}
-      <nav className="flex flex-col gap-4">
-        {menuItems.map((item) => (
-          <div
-            key={item.name}
-            onClick={() => {
-              if (location.pathname !== item.path) {
-                navigate(item.path);
-              }
-            }}
-            className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition ${
-              location.pathname === item.path
-                ? "bg-gray-800 text-green-400"
-                : "hover:bg-gray-800"
-            }`}
-          >
-            {item.icon}
-            <span>{item.name}</span>
-          </div>
-        ))}
+      <nav className="flex flex-col gap-2">
+        {menuItems.map((item) => {
+          const isActive = location.pathname === item.path;
 
-        {/* Settings (optional) */}
-        <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-800 cursor-pointer mt-auto">
+          return (
+            <div
+              key={item.name}
+              onClick={() => {
+                if (!isActive) navigate(item.path);
+              }}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all
+              ${
+                isActive
+                  ? "bg-slate-800 text-white"
+                  : "hover:bg-slate-800 hover:text-white"
+              }`}
+            >
+              {item.icon}
+              <span className="text-sm font-medium">{item.name}</span>
+            </div>
+          );
+        })}
+
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Settings */}
+        <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white cursor-pointer transition">
           <Settings size={18} />
-          <span>Settings</span>
+          <span className="text-sm font-medium">Settings</span>
         </div>
       </nav>
     </div>

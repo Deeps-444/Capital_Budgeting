@@ -84,10 +84,7 @@ function ProjectForm() {
         discountRate: Number(formData.discountRate),
       };
 
-      const res = await axios.post(
-        "http://localhost:8080/projects",
-        payload,
-      );
+      const res = await axios.post("http://localhost:8080/projects", payload);
       sessionStorage.setItem("projectResult", JSON.stringify(res.data));
       navigate("/dashboard", { state: res.data });
     } catch (err) {
@@ -97,32 +94,36 @@ function ProjectForm() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-8">
       {/* Project Info */}
-      <div className="bg-white p-4 rounded shadow">
-        <h2 className="font-semibold mb-3">Project Info</h2>
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <h2 className="text-lg font-semibold text-slate-800 mb-4">
+          Project Info
+        </h2>
 
         <input
           type="text"
           name="projectName"
           placeholder="Project Name"
-          className="w-full p-2 border rounded"
+          className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-300 text-sm"
           onChange={handleChange}
         />
         {errors.projectName && (
-          <p className="text-red-500 text-sm">{errors.projectName}</p>
+          <p className="text-red-500 text-sm mt-1">{errors.projectName}</p>
         )}
       </div>
 
       {/* Financial Inputs */}
-      <div className="bg-white p-4 rounded shadow space-y-3">
-        <h2 className="font-semibold">Financial Inputs</h2>
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+        <h2 className="text-lg font-semibold text-slate-800">
+          Financial Inputs
+        </h2>
 
         <input
           type="number"
           name="initialInvestment"
           placeholder="Initial Investment"
-          className="w-full p-2 border rounded"
+          className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-300 text-sm"
           onChange={handleChange}
         />
         {errors.initialInvestment && (
@@ -133,7 +134,7 @@ function ProjectForm() {
           type="number"
           name="revenueGrowthRate"
           placeholder="Revenue Growth Rate (%)"
-          className="w-full p-2 border rounded"
+          className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-300 text-sm"
           onChange={handleChange}
         />
         {errors.revenueGrowthRate && (
@@ -144,7 +145,7 @@ function ProjectForm() {
           type="number"
           name="inflationRate"
           placeholder="Inflation Rate (%)"
-          className="w-full p-2 border rounded"
+          className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-300 text-sm"
           onChange={handleChange}
         />
         {errors.inflationRate && (
@@ -155,7 +156,7 @@ function ProjectForm() {
           type="number"
           name="discountRate"
           placeholder="Discount Rate (%)"
-          className="w-full p-2 border rounded"
+          className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-300 text-sm"
           onChange={handleChange}
         />
         {errors.discountRate && (
@@ -164,15 +165,15 @@ function ProjectForm() {
       </div>
 
       {/* Market & Risk */}
-      <div className="bg-white p-4 rounded shadow space-y-3">
-        <h2 className="font-semibold">Market & Risk</h2>
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+        <h2 className="text-lg font-semibold text-slate-800">Market & Risk</h2>
 
         <input
           type="number"
           step="0.01"
           name="marketGrowthIndex"
           placeholder="Market Growth Index (0–1)"
-          className="w-full p-2 border rounded"
+          className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-300 text-sm"
           onChange={handleChange}
         />
         {errors.marketGrowthIndex && (
@@ -184,7 +185,7 @@ function ProjectForm() {
           step="0.01"
           name="sectorRiskIndex"
           placeholder="Sector Risk Index (0–1)"
-          className="w-full p-2 border rounded"
+          className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-300 text-sm"
           onChange={handleChange}
         />
         {errors.sectorRiskIndex && (
@@ -195,7 +196,7 @@ function ProjectForm() {
       {/* Submit */}
       <button
         onClick={evaluateProject}
-        className="bg-green-500 text-white px-4 py-3 rounded w-full"
+        className="w-full bg-slate-800 text-white py-3 rounded-2xl font-medium hover:bg-slate-700 transition"
       >
         Evaluate Project
       </button>

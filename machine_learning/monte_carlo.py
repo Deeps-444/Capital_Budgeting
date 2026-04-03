@@ -10,17 +10,17 @@ def monte_carlo_simulation(cashflows, investment, discount_rate, simulations=300
         simulated_cf = []
 
         for cf in cashflows:
-            # 🔥 Stronger variation for mix of outcomes
+            
             variation = np.random.normal(0, 0.35)
 
-            # Prevent unrealistic negative cashflows
+            
             adjusted_cf = max(cf * (1 + variation), 0)
             simulated_cf.append(adjusted_cf)
 
-        # 🔥 Add variation in discount rate
+        
         sim_discount = np.random.normal(discount_rate, 0.03)
 
-        # 🔥 Slight variation in investment
+        
         sim_investment = np.random.normal(investment, investment * 0.05)
 
         # NPV calculation
@@ -37,7 +37,7 @@ def monte_carlo_simulation(cashflows, investment, discount_rate, simulations=300
     mean_npv = np.mean(results)
     std_npv = np.std(results)
 
-    # 🔥 This will now be fractional (NOT 0 or 1)
+    
     risk_probability = np.mean(results < 0)
 
     # Percentiles 

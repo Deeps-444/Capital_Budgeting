@@ -5,6 +5,8 @@ import CashflowChart from "../components/charts/CashflowChart";
 import RiskDonut from "../components/charts/RiskDonut";
 import NPVDistribution from "../components/charts/NPVDistribution";
 import "../chartConfig";
+import KPIBox from "../components/ui/KPIBox";
+import Card from "../components/ui/Card";
 
 function DashboardPage() {
   const { state } = useLocation();
@@ -18,10 +20,12 @@ function DashboardPage() {
     return (
       <DashboardLayout>
         <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
-          <h2 className="text-2xl font-semibold">No Project Selected</h2>
+          <h2 className="text-2xl font-semibold text-slate-700">
+            No Project Selected
+          </h2>
           <button
             onClick={() => navigate("/new-project")}
-            className="bg-green-500 text-white px-4 py-2 rounded"
+            className="bg-slate-800 text-white px-5 py-2 rounded-xl hover:bg-slate-700 transition"
           >
             Create New Project
           </button>
@@ -44,55 +48,61 @@ function DashboardPage() {
 
   return (
     <DashboardLayout>
-      <div className="p-6 space-y-6">
+      <div className="p-8 space-y-8 bg-slate-50 min-h-screen">
         {/* Title */}
-        <h1 className="text-2xl font-bold">{projectName}</h1>
+        <h1 className="text-3xl font-semibold text-slate-800">{projectName}</h1>
 
         {/* KPI CARDS */}
-        <div className="grid grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded shadow">
-            <p className="text-gray-500">Mean NPV</p>
-            <h2 className="text-xl font-bold">₹{meanNPV.toFixed(0)}</h2>
-          </div>
+        <div className="grid grid-cols-4 gap-6">
+          <KPIBox
+            title="Mean NPV"
+            value={`₹${meanNPV.toFixed(0)}`}
+            border="border-green-500"
+          />
 
-          <div className="bg-white p-4 rounded shadow">
-            <p className="text-gray-500">Risk</p>
-            <h2 className="text-xl font-bold">
-              {(riskProbability * 100).toFixed(1)}%
-            </h2>
-          </div>
+          <KPIBox
+            title="Risk"
+            value={`${(riskProbability * 100).toFixed(1)}%`}
+            border="border-red-500"
+          />
 
-          <div className="bg-white p-4 rounded shadow">
-            <p className="text-gray-500">Worst Case (P10)</p>
-            <h2 className="text-xl font-bold">₹{p10.toFixed(0)}</h2>
-          </div>
+          <KPIBox
+            title="Worst Case (P10)"
+            value={`₹${p10.toFixed(0)}`}
+            border="border-yellow-500"
+          />
 
-          <div className="bg-white p-4 rounded shadow">
-            <p className="text-gray-500">Best Case (P90)</p>
-            <h2 className="text-xl font-bold">₹{p90.toFixed(0)}</h2>
-          </div>
+          <KPIBox
+            title="Best Case (P90)"
+            value={`₹${p90.toFixed(0)}`}
+            border="border-blue-500"
+          />
         </div>
 
         {/* Charts */}
         <div className="grid grid-cols-2 gap-6">
           {/* Cashflow */}
-          <div className="bg-white p-4 rounded shadow">
-            <h3 className="font-semibold mb-2">Cashflow Analysis</h3>
+          <Card>
+            <h3 className="font-semibold text-slate-700 mb-4">
+              Cashflow Analysis
+            </h3>
             <CashflowChart cashflows={cashflows} />
-          </div>
+          </Card>
 
           {/* Risk */}
-          <div className="bg-white p-4 rounded shadow">
-            <h3 className="font-semibold mb-2">Risk Analysis</h3>
+          <Card>
+            <h3 className="font-semibold text-slate-700 mb-4">Risk Analysis</h3>
             <RiskDonut risk={riskProbability} />
-          </div>
+          </Card>
         </div>
 
         {/* NPV Distribution */}
-        <div className="bg-white p-4 rounded shadow">
-          <h3 className="font-semibold mb-2">NPV Distribution</h3>
+        <Card>
+          <h3 className="font-semibold text-slate-700 mb-4">
+            NPV Distribution
+          </h3>
           <NPVDistribution mean={meanNPV} std={stdNPV} />
-        </div>
+        </Card>
       </div>
     </DashboardLayout>
   );
