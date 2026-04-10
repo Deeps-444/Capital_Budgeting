@@ -1,7 +1,7 @@
 import numpy as np
 
 def monte_carlo_simulation(cashflows, investment, discount_rate, simulations=3000):
-    
+    # helps to analyse investement risk under uncertainity
     cashflows = np.array(cashflows)
     results = []
 
@@ -11,17 +11,19 @@ def monte_carlo_simulation(cashflows, investment, discount_rate, simulations=300
 
         for cf in cashflows:
             
-            variation = np.random.normal(0, 0.35)
+            variation = np.random.normal(0, 0.1) # -0.05, 0.4
+            variation = np.clip(variation, -0.3, 0.3)
 
             
-            adjusted_cf = max(cf * (1 + variation), 0)
+            adjusted_cf = cf * (1 + variation)
             simulated_cf.append(adjusted_cf)
 
         
-        sim_discount = np.random.normal(discount_rate, 0.03)
+        sim_discount = np.random.normal(discount_rate, 0.02)
+        sim_discount = max(0.01, sim_discount)
 
         
-        sim_investment = np.random.normal(investment, investment * 0.05)
+        sim_investment = np.random.normal(investment, investment * 0.02)
 
         # NPV calculation
         npv = -sim_investment
@@ -46,10 +48,10 @@ def monte_carlo_simulation(cashflows, investment, discount_rate, simulations=300
     p90 = np.percentile(results, 90)
 
     return {
-        "meanNPV": float(mean_npv),
-        "stdNPV": float(std_npv),
-        "riskProbability": float(risk_probability),
-        "percentiles": {
+        "meanNPV": float(mean_npv), # expected
+        "stdNPV": float(std_npv), # valatility
+        "riskProbability": float(risk_probability), # chance of  loss
+        "percentiles": { # worst and best case 
             "p10": float(p10),
             "p50": float(p50),
             "p90": float(p90)

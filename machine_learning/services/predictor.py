@@ -1,6 +1,7 @@
 import joblib
 import numpy as np
 import os
+import pandas as pd
 
 # Get current file directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -16,6 +17,9 @@ wc_model = joblib.load(wc_model_path)
 capex_model = joblib.load(capex_model_path)
 
 
+
+
+
 def predict_drivers(input_data: dict):
     """
     input_data: dictionary from API
@@ -23,18 +27,24 @@ def predict_drivers(input_data: dict):
     """
 
     # Convert to array (order must match training)
-    features = np.array([[
-        input_data["initialInvestment"],
-        input_data["revenueGrowthRate"],
-        input_data["inflationRate"],
-        input_data["marketGrowthIndex"],
-        input_data["sectorRiskIndex"],
-        input_data["discountRate"]
-    ]])
+    features = pd.DataFrame([input_data])[
+    ["initialInvestment","revenueGrowthRate","inflationRate",
+     "marketGrowthIndex","sectorRiskIndex","discountRate"]
+    ]
+    features["revenueGrowthRate"] /= 100
+    features["inflationRate"] /= 100
+    # features["marketGrowthIndex"] /= 100   # if frontend sends %
+    # features["sectorRiskIndex"] /= 100     # if %
+    features["discountRate"] /= 100
+    
 
     pred_cost = cost_model.predict(features)[0]
     pred_wc = wc_model.predict(features)[0]
     pred_capex = capex_model.predict(features)[0]
+
+    pred_cost = np.clip(pred_cost, 0.2, 0.9)
+    pred_wc = np.clip(pred_wc, 0.05, 0.4)
+    pred_capex = np.clip(pred_capex, 0.03, 0.5)
 
     return {
         "operatingCostRatio": float(pred_cost),

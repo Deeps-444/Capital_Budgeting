@@ -7,8 +7,8 @@ public class ProjectInputDto {
 	private double initialInvestment;
 	private double revenueGrowthRate;
 	private double inflationRate;
-	private double marketGrowthIndex;
-	private double sectorRiskIndex;
+	private String marketGrowthIndex; //changed
+	private String sectorRiskIndex; // changed
 	private double discountRate;
 	
 	//getter and setter
@@ -42,16 +42,17 @@ public class ProjectInputDto {
 	public void setInflationRate(double inflationRate) {
 		this.inflationRate = inflationRate;
 	}
-	public double getMarketGrowthIndex() {
+	
+	public String getMarketGrowthIndex() {
 		return marketGrowthIndex;
 	}
-	public void setMarketGrowthIndex(double marketGrowthIndex) {
+	public void setMarketGrowthIndex(String marketGrowthIndex) {
 		this.marketGrowthIndex = marketGrowthIndex;
 	}
-	public double getSectorRiskIndex() {
+	public String getSectorRiskIndex() {
 		return sectorRiskIndex;
 	}
-	public void setSectorRiskIndex(double sectorRiskIndex) {
+	public void setSectorRiskIndex(String sectorRiskIndex) {
 		this.sectorRiskIndex = sectorRiskIndex;
 	}
 	public double getDiscountRate() {

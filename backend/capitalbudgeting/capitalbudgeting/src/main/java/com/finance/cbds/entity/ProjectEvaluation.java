@@ -34,6 +34,21 @@ public class ProjectEvaluation {
     @JoinColumn(name = "user_id")
     private User user;
     
+    private Double npv;
+    private Double irr;
+    
+	public Double getNpv() {
+		return npv;
+	}
+	public void setNpv(Double npv) {
+		this.npv = npv;
+	}
+	public Double getIrr() {
+		return irr;
+	}
+	public void setIrr(Double irr) {
+		this.irr = irr;
+	}
 	public User getUser() {
 		return user;
 	}

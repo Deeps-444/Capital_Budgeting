@@ -28,12 +28,13 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**").permitAll() // ✅ your controller matches this
                 .requestMatchers("/projects", "/projects/**").permitAll()
                 .anyRequest().authenticated()
+//                .anyRequest().permitAll() // added for testing on postman
             );
 
         return http.build();
     }
 
-    // ✅ CORS CONFIGURATION (THIS FIXES 403)
+    // CORS CONFIGURATION (THIS FIXES 403)
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();

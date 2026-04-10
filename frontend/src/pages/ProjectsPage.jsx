@@ -74,7 +74,9 @@ function ProjectsPage() {
                       `http://localhost:8080/projects/${proj.projectId}`,
                     );
 
-                    navigate("/dashboard", { state: res.data });
+                    navigate(`/dashboard/${proj.projectId}`, {
+                      state: res.data,
+                    });
                   } catch (err) {
                     console.error(err);
                     alert("Error loading project");
@@ -86,9 +88,11 @@ function ProjectsPage() {
               >
                 {/* Title */}
                 <h2 className="font-semibold text-slate-800">
-                  {loadingId === proj.projectId
-                    ? "Loading..."
-                    : proj.projectName}
+                  {loadingId === proj.projectId ? (
+                    <span className="text-slate-400">Opening...</span>
+                  ) : (
+                    proj.projectName
+                  )}
                 </h2>
 
                 {/* Info */}

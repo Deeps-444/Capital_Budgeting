@@ -53,7 +53,7 @@ public class PeService {
 	private ProjectResultDto mapToResultDto(ProjectEvaluation project, MLResponseDto mlResponse) {
 
 	    ProjectResultDto result = new ProjectResultDto();
-
+	    result.setProjectId(project.getId());
 	    result.setProjectName(project.getProjectName());
 	    result.setInitialInvestment(project.getInitialInvestment());
 
@@ -67,6 +67,8 @@ public class PeService {
 	    result.setP10(mlResponse.getMonteCarlo().getPercentiles().getP10());
 	    result.setP50(mlResponse.getMonteCarlo().getPercentiles().getP50());
 	    result.setP90(mlResponse.getMonteCarlo().getPercentiles().getP90());
+	    result.setNPV(mlResponse.getNpv());
+	    result.setIRR(mlResponse.getIrr());
 
 	    return result;
 	}
@@ -75,9 +77,12 @@ public class PeService {
 	private ProjectResultDto convertToDto(ProjectEvaluation project) {
 
 	    ProjectResultDto dto = new ProjectResultDto();
-
+	    
+	    dto.setProjectId(project.getId());
 	    dto.setProjectName(project.getProjectName());
 	    dto.setInitialInvestment(project.getInitialInvestment());
+	    dto.setNPV(project.getNpv());
+	    dto.setIRR(project.getIrr());
 
 	    // Drivers
 	    PredictedDrivers drivers = driversRepo.findByProject(project);
@@ -87,7 +92,7 @@ public class PeService {
 	    driversDto.setCapexRatio(drivers.getCapexRatio());
 
 	    dto.setPredictedDrivers(driversDto);
-
+	    
 	    // Cashflows
 	    List<Cashflow> cashflows = cashflowRepo.findByProject(project);
 	    List<CashflowDto> cfDtos = cashflows.stream().map(cf -> {
@@ -120,90 +125,126 @@ public class PeService {
 
 	@Transactional
 	public ProjectResultDto saveProject(ProjectInputDto input) {
-		//get user
-		User user = userRepository.findById(input.getUserId())
-				.orElseThrow(()-> new RuntimeException("User Not found"));
-		
-		//saving projects in db
+
+	    
+	    // GET USER
+	    User user = userRepository.findById(input.getUserId())
+	            .orElseThrow(() -> new RuntimeException("User Not found"));
+	    
+	    // taking the scenario as string and converting into double
+	    
+	    double marketIndex;
+	    double riskIndex;
+
+	   // Market mapping
+	    switch (input.getMarketGrowthIndex()) {
+	        case "LOW": marketIndex = 0.8; break;
+	        case "MEDIUM": marketIndex = 1.0; break;
+	        case "HIGH": marketIndex = 1.2; break;
+	        default: marketIndex = 1.0;
+	    }
+
+	   // Risk mapping
+	    switch (input.getSectorRiskIndex()) {
+	       case "LOW": riskIndex = 0.8; break;
+	       case "MEDIUM": riskIndex = 1.0; break;
+	       case "HIGH": riskIndex = 1.3; break;
+	       default: riskIndex = 1.0;
+	    }
+	    
+	    //  CREATE + SAVE PROJECT
+	    
 	    ProjectEvaluation project = new ProjectEvaluation();
 
 	    project.setProjectName(input.getProjectName());
 	    project.setInitialInvestment(input.getInitialInvestment());
 	    project.setRevenueGrowthRate(input.getRevenueGrowthRate());
 	    project.setInflationRate(input.getInflationRate());
-	    project.setMarketGrowthIndex(input.getMarketGrowthIndex());
-	    project.setSectorRiskIndex(input.getSectorRiskIndex());
+	    project.setMarketGrowthIndex(marketIndex);
+	    project.setSectorRiskIndex(riskIndex);
 	    project.setDiscountRate(input.getDiscountRate());
-	    
 	    project.setUser(user);
+
+	    project = repo.save(project); 
 	    
-	    repo.save(project);
+	    // for ml to receive values not string
+	    input.setMarketGrowthIndex(String.valueOf(marketIndex));
+	    input.setSectorRiskIndex(String.valueOf(riskIndex));
 	    
-	    //calling ml 
-//	    System.out.println("Calling ML...");
-	    MLResponseDto mlResponse = mlServiceClient.getPrediction(input);
-//	    System.out.println("ML Response: " + mlResponse);
-	    
+	    //  call ml service
+	    MLResponseDto mlResponse = mlServiceClient.getPrediction(input, marketIndex, riskIndex);
+
 	    if (mlResponse == null) {
 	        throw new RuntimeException("ML service failed");
 	    }
-	   
-	    //saving drivers
+
+	    
+	    // new update !!!
+	    project.setNpv(mlResponse.getNpv());
+	    project.setIrr(mlResponse.getIrr());
+
+	    repo.save(project); // update db
+
+	    
+	    //  SAVE PREDICTED DRIVERS
+	    
 	    PredictedDrivers drivers = new PredictedDrivers();
+
 	    drivers.setProject(project);
 	    drivers.setOperatingCostRatio(
-	        mlResponse.getPredictedDrivers().getOperatingCostRatio()
+	            mlResponse.getPredictedDrivers().getOperatingCostRatio()
 	    );
 	    drivers.setWorkingCapitalRatio(
-	        mlResponse.getPredictedDrivers().getWorkingCapitalRatio()
+	            mlResponse.getPredictedDrivers().getWorkingCapitalRatio()
 	    );
 	    drivers.setCapexRatio(
-	        mlResponse.getPredictedDrivers().getCapexRatio()
+	            mlResponse.getPredictedDrivers().getCapexRatio()
 	    );
 
 	    driversRepo.save(drivers);
+
 	    
-	    
-	    //saving cashflow
+	    // SAVE CASHFLOWS
 	    for (CashflowDto cfDto : mlResponse.getCashflows()) {
+
 	        Cashflow cf = new Cashflow();
 
 	        cf.setProject(project);
 	        cf.setYear(cfDto.getYear());
 	        cf.setRevenue(cfDto.getRevenue());
+
+	        // ⚠️ CHECK THIS MAPPING
 	        cf.setCost(cfDto.getCost());
 	        cf.setDeltaWC(cfDto.getDeltaWC());
+
 	        cf.setCapex(cfDto.getCapex());
 	        cf.setCashflow(cfDto.getCashflow());
 
 	        cashflowRepo.save(cf);
 	    }
+
+	    // SAVE RISK ANALYSIS
 	    
-	    // saving risk
+	    if (mlResponse.getMonteCarlo() == null) {
+	        throw new RuntimeException("Monte Carlo missing");
+	    }
+
 	    RiskAnalysis risk = new RiskAnalysis();
 
 	    risk.setProject(project);
 	    risk.setMeanNPV(mlResponse.getMonteCarlo().getMeanNPV());
 	    risk.setStdNPV(mlResponse.getMonteCarlo().getStdNPV());
 	    risk.setRiskProbability(mlResponse.getMonteCarlo().getRiskProbability());
+
 	    risk.setP10(mlResponse.getMonteCarlo().getPercentiles().getP10());
 	    risk.setP50(mlResponse.getMonteCarlo().getPercentiles().getP50());
 	    risk.setP90(mlResponse.getMonteCarlo().getPercentiles().getP90());
 
 	    riskRepo.save(risk);
-	    
-	    
-	    //create result dto
-//	    ProjectResultDto result = new ProjectResultDto();
-//	    result.setProjectName(project.getProjectName());
-//	    result.setInitialInvestment(project.getInitialInvestment());
-//	    result.setMeanNPV(mlResponse.getMeanNPV());
-//	    result.setRiskProbability(mlResponse.getRiskProbability());
-//	    result.setPredictedCashflows(mlResponse.getPredictedCashflows());
-//	    result.setNpvDistribution(mlResponse.getNpvDistribution());
 
+	   
+	    // RETURN RESULT	    
 	    return mapToResultDto(project, mlResponse);
-	    
 	}
 	
 	

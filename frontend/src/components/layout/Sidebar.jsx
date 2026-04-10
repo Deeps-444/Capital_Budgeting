@@ -21,7 +21,16 @@ function Sidebar() {
       {/* Logo */}
       <h1
         className="text-2xl font-semibold mb-10 text-white tracking-tight cursor-pointer"
-        onClick={() => navigate("/dashboard")}
+        onClick={() => {
+          const stored = sessionStorage.getItem("projectResult");
+
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            navigate(`/dashboard/${parsed.projectId}`);
+          } else {
+            navigate("/projects");
+          }
+        }}
       >
         Cap<span className="text-green-400">Wise</span>
       </h1>
@@ -35,7 +44,18 @@ function Sidebar() {
             <div
               key={item.name}
               onClick={() => {
-                if (!isActive) navigate(item.path);
+                if (item.name === "Dashboard") {
+                  const stored = sessionStorage.getItem("projectResult");
+
+                  if (stored) {
+                    const parsed = JSON.parse(stored);
+                    navigate(`/dashboard/${parsed.projectId}`);
+                  } else {
+                    navigate("/projects");
+                  }
+                } else {
+                  if (!isActive) navigate(item.path);
+                }
               }}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all
               ${

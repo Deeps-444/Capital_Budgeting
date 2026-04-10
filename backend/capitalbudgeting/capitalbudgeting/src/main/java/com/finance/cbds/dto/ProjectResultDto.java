@@ -1,8 +1,9 @@
-package com.finance.cbds.dto;
+ package com.finance.cbds.dto;
 
 import java.util.List;
 
 public class ProjectResultDto {
+	private Long projectId;
 	private String projectName;
 	private Double initialInvestment;
 	//drivers
@@ -20,7 +21,30 @@ public class ProjectResultDto {
     private Double p50;
     private Double p90;
     
-  //getters and setters------------------
+    private Double NPV;
+    private Double IRR;
+    
+    
+    
+  public Long getProjectId() {
+		return projectId;
+	}
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
+	}
+public Double getNPV() {
+		return NPV;
+	}
+	public void setNPV(Double nPV) {
+		NPV = nPV;
+	}
+	public Double getIRR() {
+		return IRR;
+	}
+	public void setIRR(Double iRR) {
+		IRR = iRR;
+	}
+	//getters and setters------------------
 	public String getProjectName() {
 		return projectName;
 	}

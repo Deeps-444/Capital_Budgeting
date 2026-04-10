@@ -51,13 +51,13 @@ function ProjectForm() {
       newErrors.discountRate = "Enter % between 0–100";
     }
 
-    if (formData.marketGrowthIndex < 0 || formData.marketGrowthIndex > 1) {
-      newErrors.marketGrowthIndex = "Value must be between 0 and 1";
-    }
+    // if (formData.marketGrowthIndex < 0 || formData.marketGrowthIndex > 1) {
+    //   newErrors.marketGrowthIndex = "Value must be between 0 and 1";
+    // }
 
-    if (formData.sectorRiskIndex < 0 || formData.sectorRiskIndex > 1) {
-      newErrors.sectorRiskIndex = "Value must be between 0 and 1";
-    }
+    // if (formData.sectorRiskIndex < 0 || formData.sectorRiskIndex > 1) {
+    //   newErrors.sectorRiskIndex = "Value must be between 0 and 1";
+    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -79,14 +79,14 @@ function ProjectForm() {
         initialInvestment: Number(formData.initialInvestment),
         revenueGrowthRate: Number(formData.revenueGrowthRate),
         inflationRate: Number(formData.inflationRate),
-        marketGrowthIndex: Number(formData.marketGrowthIndex),
-        sectorRiskIndex: Number(formData.sectorRiskIndex),
+        marketGrowthIndex: formData.marketGrowthIndex,
+        sectorRiskIndex: formData.sectorRiskIndex,
         discountRate: Number(formData.discountRate),
       };
 
       const res = await axios.post("http://localhost:8080/projects", payload);
       sessionStorage.setItem("projectResult", JSON.stringify(res.data));
-      navigate("/dashboard", { state: res.data });
+      navigate(`/dashboard/${res.data.projectId}`, { state: res.data });
     } catch (err) {
       console.error(err);
       alert("Error evaluating project");
@@ -168,26 +168,31 @@ function ProjectForm() {
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
         <h2 className="text-lg font-semibold text-slate-800">Market & Risk</h2>
 
-        <input
-          type="number"
-          step="0.01"
-          name="marketGrowthIndex"
-          placeholder="Market Growth Index (0–1)"
-          className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-300 text-sm"
-          onChange={handleChange}
-        />
-        {errors.marketGrowthIndex && (
-          <p className="text-red-500 text-sm">{errors.marketGrowthIndex}</p>
-        )}
+        <select
+          value={formData.marketGrowthIndex}
+          onChange={(e) =>
+            setFormData({ ...formData, marketGrowthIndex: e.target.value })
+          }
+          className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-300"
+        >
+          <option value="">Select Market Growth</option>
+          <option value="LOW">Low Growth</option>
+          <option value="MEDIUM">Moderate Growth</option>
+          <option value="HIGH">High Growth</option>
+        </select>
 
-        <input
-          type="number"
-          step="0.01"
-          name="sectorRiskIndex"
-          placeholder="Sector Risk Index (0–1)"
-          className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-300 text-sm"
-          onChange={handleChange}
-        />
+        <select
+          value={formData.sectorRiskIndex}
+          onChange={(e) =>
+            setFormData({ ...formData, sectorRiskIndex: e.target.value })
+          }
+          className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-300"
+        >
+          <option value="">Select Sector Risk</option>
+          <option value="LOW">Low Risk</option>
+          <option value="MEDIUM">Moderate Risk</option>
+          <option value="HIGH">High Risk</option>
+        </select>
         {errors.sectorRiskIndex && (
           <p className="text-red-500 text-sm">{errors.sectorRiskIndex}</p>
         )}

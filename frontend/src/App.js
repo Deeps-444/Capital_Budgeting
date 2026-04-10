@@ -12,6 +12,7 @@ import DashboardPage from "./pages/DashboardPage";
 import RegisterPage from "./pages/RegisterPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import WelcomePage from "./pages/WelcomePage";
 
 function App() {
   return (
@@ -31,8 +32,9 @@ function App() {
           }
         />
 
+        {/* changes */}
         <Route
-          path="/dashboard"
+          path="/dashboard/:projectId"
           element={
             <ProtectedRoute>
               <DashboardPage />
@@ -50,7 +52,7 @@ function App() {
         />
 
         {/* Default */}
-        <Route path="/" element={<Navigate to="/new-project" />} />
+        <Route path="/" element={<WelcomePage />} />
       </Routes>
     </Router>
   );
