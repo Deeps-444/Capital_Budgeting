@@ -27,6 +27,7 @@ function ProjectsPage() {
           `http://localhost:8080/projects/user/${user.userId}`,
         );
         setProjects(res.data);
+        console.log("Fetched Projects List:", res.data);
       } catch (err) {
         console.error(err);
         alert("Error fetching projects");

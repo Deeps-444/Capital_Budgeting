@@ -40,7 +40,7 @@ function DashboardPage() {
           `http://localhost:8080/projects/${projectId}`,
         );
         setProjectData(res.data);
-        
+        console.log("Dashboard Data Loaded:", res.data);
         // optional: store for fallback
         sessionStorage.setItem("projectResult", JSON.stringify(res.data));
       } catch (err) {
