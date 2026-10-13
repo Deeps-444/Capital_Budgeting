@@ -1,0 +1,76 @@
+Folder PATH listing for volume OS
+Volume serial number is E854-D738
+C:.
+|   .env
+|   app_v2.py
+|   monte_carlo.py
+|   test.py
+|   v2_struct.txt
+|   
++---data
+|       raw_dataset.csv
+|       
++---document_extraction
+|   |   .env
+|   |   extractor.py
+|   |   parser.py
+|   |   schemas.py
+|   |   __init__.py
+|   |   
+|   \---__pycache__
+|           extractor.cpython-313.pyc
+|           parser.cpython-313.pyc
+|           schemas.cpython-313.pyc
+|           __init__.cpython-313.pyc
+|           
++---model
+|       bbn_bins.pkl
+|       bbn_model.pkl
+|       deviation_distributions.pkl
+|       lstm_model.keras
+|       shap_background.npy
+|       X_scaler.pkl
+|       y_scaler.pkl
+|       
++---services
+|   |   bbn_predictor.py
+|   |   cbr_retriever.py
+|   |   complexity_assessor.py
+|   |   future_assumptions.py
+|   |   future_assumptions_research.py
+|   |   future_assumption_proposer.py
+|   |   lstm_predictor.py
+|   |   model_router.py
+|   |   project_pipeline.py
+|   |   risk_assessor.py
+|   |   
+|   +---explainability
+|   |   |   bbn_explainer.py
+|   |   |   cbr_explainer.py
+|   |   |   financial_explainer.py
+|   |   |   lstm_explainer.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           bbn_explainer.cpython-313.pyc
+|   |           cbr_explainer.cpython-313.pyc
+|   |           financial_explainer.cpython-313.pyc
+|   |           lstm_explainer.cpython-313.pyc
+|   |           __init__.cpython-313.pyc
+|   |           
+|   \---__pycache__
+|           bbn_predictor.cpython-313.pyc
+|           cbr_retriever.cpython-313.pyc
+|           complexity_assessor.cpython-313.pyc
+|           future_assumptions.cpython-313.pyc
+|           future_assumptions_research.cpython-313.pyc
+|           future_assumption_proposer.cpython-313.pyc
+|           lstm_predictor.cpython-313.pyc
+|           model_router.cpython-313.pyc
+|           project_pipeline.cpython-313.pyc
+|           risk_assessor.cpython-313.pyc
+|           
+\---__pycache__
+        app_v2.cpython-313.pyc
+        monte_carlo.cpython-313.pyc
+        

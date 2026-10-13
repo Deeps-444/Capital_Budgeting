@@ -13,7 +13,7 @@ import RegisterPage from "./pages/RegisterPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import WelcomePage from "./pages/WelcomePage";
-
+import V2AnalysisPage from "./v2/pages/V2AnalysisPage";
 function App() {
   return (
     <Router>
@@ -50,7 +50,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route path="/v2-analysis" element={<V2AnalysisPage />} />
         {/* Default */}
         <Route path="/" element={<WelcomePage />} />
       </Routes>
